@@ -1,35 +1,10 @@
 import {Box, Button, Text, TextField, Image} from '@skynexui/components';
+import React from 'react';
+import {useRouter} from 'next/router';
 import appConfig from '../config.json';
 
 
-function GlobalStyle() {
-    return (
-      <style global jsx>{`
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        list-style: none;
-      }
-      body {
-        font-family: 'Open Sans', sans-serif;
-      }
-      /* App fit Height */ 
-      html, body, #__next {
-        min-height: 100vh;
-        display: flex;
-        flex: 1;
-      }
-      #__next {
-        flex: 1;
-      }
-      #__next > * {
-        flex: 1;
-      }
-      /* ./App fit Height */ 
-    `}</style>
-    );
-  }
+
 
 function Titulo(props){
     const Tag = props.tag ||'h1';
@@ -46,26 +21,18 @@ function Titulo(props){
         </>
     );
 }
-//Componete React
-//function HomePage() {
-    //JSX
-//    return(
-//        <div >
-//           <GlobalStyle/>
-//            <Titulo tag="h2">Boas vindas de volta</Titulo>
-//            <h2>Aluracord (Adelmo-Jr)</h2>
-//        </div>
-//    ) 
-//  }
-  
+ 
 //  export default HomePage
 
 export default function PaginaInicial() {
-    const username = 'Adelmo-Jr';
-  
+    //const username = 'Adelmo-Jr';
+    const [username, setUsername] = React.useState('');
+    const roteamento = useRouter();
+
     return (
       <>
-        <GlobalStyle />
+       
+       
         <Box
           styleSheet={{
             display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -86,12 +53,17 @@ export default function PaginaInicial() {
               width: '100%', maxWidth: '700px',
               borderRadius: '5px', padding: '32px', margin: '16px',
               boxShadow: '0 2px 10px 0 rgb(60 30 70 / 100%)',
-              backgroundColor: appConfig.theme.colors.neutrals[900],
+              backgroundColor: appConfig.theme.colors.neutrals[999],
             }}
           >
             {/* Formulário */}
             <Box
               as="form"
+              onSubmit={function(infosDoEvento){
+                  infosDoEvento.preventDefault();
+                  console.log('Alguém submeteu o form');
+                roteamento.push(`/chat?username=${username}`);
+                }}
               styleSheet={{
                 display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
                 width: { xs: '100%', sm: '50%' }, textAlign: 'center', marginBottom: '32px',
@@ -102,7 +74,30 @@ export default function PaginaInicial() {
                 {appConfig.name}
               </Text>
   
+             {/* <input 
+              type="text"
+              value={username}
+              onChange={function (event){
+                 console.log('usuario digitou',event.target.value);
+                //Onde esta o valor?
+                 const valor=event.target.value;
+                //Trocar o valor da variavel
+                //Atraves do React e avise quem precisa
+                setUsername(valor);
+            }}
+
+              />*/}
               <TextField
+               placeholder='Digite seu username do GitHub...'
+               value={username}
+               onChange={function (event){
+                console.log('usuario digitou',event.target.value);
+               //Onde esta o valor?
+                const valor=event.target.value;
+               //Trocar o valor da variavel
+               //Atraves do React e avise quem precisa
+               setUsername(valor);
+           }}
                 fullWidth
                 textFieldColors={{
                   neutral: {
@@ -112,10 +107,10 @@ export default function PaginaInicial() {
                     backgroundColor: appConfig.theme.colors.neutrals[800],
                   },
                 }}
-              />
+            />
               <Button
                 type='submit'
-                label='Entrar'
+                label='ENTRAR'
                 fullWidth
                 buttonColors={{
                   contrastColor: appConfig.theme.colors.neutrals["000"],
@@ -123,8 +118,34 @@ export default function PaginaInicial() {
                   mainColorLight: appConfig.theme.colors.primary[400],
                   mainColorStrong: appConfig.theme.colors.primary[800],
                 }}
+                styleSheet={{
+                  marginTop: "12px",
+                  fontWeight: "900",
+                }}
+                disabled={username.length < 3}
+                
+                
               />
+              
+               <Button
+              type="submit"
+              label="CRIAR CONTA NO GITHUB"
+              href="https://github.com/signup?source=login"
+              iconName="github"
+              fullWidth
+              buttonColors={{
+                contrastColor: appConfig.theme.colors.neutrals["100"],
+                mainColor: appConfig.theme.colors.neutrals[900],
+                mainColorLight: appConfig.theme.colors.primary[400],
+                mainColorStrong: appConfig.theme.colors.neutrals[800],
+              }}
+              styleSheet={{
+                marginTop: "12px",
+                fontWeight: "900",
+              }}
+            />
             </Box>
+            
             {/* Formulário */}
   
   
@@ -147,7 +168,7 @@ export default function PaginaInicial() {
               <Image
                 styleSheet={{
                   borderRadius: '50%',
-                  marginBottom: '16px',
+                  marginBottom: '19px',
                 }}
                 src={`https://github.com/${username}.png`}
               />
@@ -161,6 +182,7 @@ export default function PaginaInicial() {
                 }}
               >
                 {username}
+             
               </Text>
             </Box>
             {/* Photo Area */}
